@@ -283,6 +283,7 @@
 % \makeatother
 
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{booktabs} % For formal tables
 \usepackage{mathrsfs} % script font
 \usepackage{bm}
@@ -298,32 +299,6 @@
 \usepackage{tabularx}
 \usepackage{enumitem}
 \usepackage[percent]{overpic}
-
-\newcommand{\R}{\mathbb{R}}
-\makeatletter
-\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
-\makeatother
-\newcommand{\bb}[1]{\mathbb{#1}}
-\newcommand{\Lagr}{\mathcal{L}}
-\newcommand{\secref}[1]{\S\ref{#1}}
-\renewcommand{\sectionautorefname}{\S}
-\renewcommand{\subsectionautorefname}{\S}
-\renewcommand{\subsubsectionautorefname}{\S}
-
-\newcommand{\plusbinomial}[3][2]{(#2 + #3)^#1}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\vectorize}{vec}
-\DeclareMathOperator*{\tr}{tr}
-
-\def\R{\mathbb{R}}
-
-% Various style definitions for geometric quantities
-\def\vec#1{\mathbf{#1}} % Vector quantity
-
-\def\comment#1{{\color{red} #1}}
-\def\todo#1{\comment{\bf TODO: #1}}
-\def\new#1{{\color{red} #1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -450,10 +425,6 @@
 \include{intro}
 
 %    2. Main body
-% Generally recommended to put each chapter into a separate file
-%\include{model}
-%\include{impl}
-%\include{discussion}
 \include{background}
 \include{relatedwork}
 \include{constraint}

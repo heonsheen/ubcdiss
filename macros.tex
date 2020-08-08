@@ -18,6 +18,32 @@
 \newcommand{\ie}{i.e.,\ }	% proper form for that is (\ie a, b, c)
 \newcommand{\etal}{\emph{et al}}
 
+\newcommand{\X}{test}
+
+\newcommand{\R}{\mathbb{R}}
+\makeatletter
+\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
+\makeatother
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\Lagr}{\mathcal{L}}
+\newcommand{\secref}[1]{\S\ref{#1}}
+\renewcommand{\sectionautorefname}{\S}
+\renewcommand{\subsectionautorefname}{\S}
+\renewcommand{\subsubsectionautorefname}{\S}
+
+\newcommand{\plusbinomial}[3][2]{(#2 + #3)^#1}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\vectorize}{vec}
+\DeclareMathOperator*{\tr}{tr}
+
+% Various style definitions for geometric quantities
+\def\vec#1{\mathbf{#1}} % Vector quantity
+
+\def\comment#1{{\color{red} #1}}
+\def\todo#1{\comment{\bf TODO: #1}}
+\def\new#1{{\color{red} #1}}
+
 % Some useful macros for typesetting terms.
 \newcommand{\file}[1]{\texttt{#1}}
 \newcommand{\class}[1]{\texttt{#1}}
@@ -57,5 +83,6 @@
 % \FIXME{} is a useful macro for noting things needing to be changed.
 % The following definition will also output a warning to the console
 \newcommand{\FIXME}[1]{\typeout{**FIXME** #1}\textbf{[FIXME: #1]}}
+
 
 % END
