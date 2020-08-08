@@ -3,18 +3,28 @@
 
 \chapter{Abstract}
 
-This document provides brief instructions for using the \class{ubcdiss}
-class to write a \acs{UBC}-conformant dissertation in \LaTeX.  This
-document is itself written using the \class{ubcdiss} class and is
-intended to serve as an example of writing a dissertation in \LaTeX.
-This document has embedded \acp{URL} and is intended to be viewed
-using a computer-based \ac{PDF} reader.
-
-Note: Abstracts should generally try to avoid using acronyms.
-
-Note: at \ac{UBC}, both the \ac{GPS} Ph.D. defence programme and the
-Library's online submission system restricts abstracts to 350
-words.
+Simulation of human soft tissues in contact with their environment
+is essential in many fields, including visual effects and apparel
+design.  Biological tissues are nearly incompressible. However,
+standard methods employ compressible elasticity models and achieve
+incompressibility indirectly by setting Poisson's ratio to be close
+to 0.5.  This approach can produce results that are plausible
+qualitatively but inaccurate quantatively. This approach also causes
+numerical instabilities and locking in coarse discretizations or
+otherwise pose a prohibitive restriction on the size of the time
+step.
+%
+We propose a novel approach to alleviate these issues by
+replacing indirect volume preservation using Poisson's ratios with
+direct enforcement of zonal volume constraints, while controlling
+fine-scale volumetric deformation through a cell-wise penalty.
+To increase realism, we propose an epidermis model to mimic the
+dramatically higher surface stiffness on real skinned bodies.
+We demonstrate that our method produces stable realistic
+deformations with precise volume preservation but without locking
+artifacts. Our method improves the stability of the standard
+Neo-Hookean model and the general compression recovery in the Stable
+Neo-Hookean model.
 
 % Consider placing version information if you circulate multiple drafts
 %\vfill

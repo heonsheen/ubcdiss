@@ -1,0 +1,43 @@
+\chapter{Conclusion}
+\label{ch:Conclusion}
+
+Although our method generates more realistic volume preservation and
+reduces locking, for simulations without large deformations, the
+standard Neo-Hookean model may be sufficient due to its
+simplicity. This is especially true when no other constraints, such as due to external contact, are present in the simulation. Constrained optimization adds
+some complexity to the simulation, though our results in Table
+\ref{tab:performance} show that the increase is computation times is
+not prohibitive in most cases. Overall, our findings allow a simple and inexpensive
+extension to existing FEM systems to solve the problem of volumetric
+locking while simulating incompressible materials such as the human
+body.
+
+\paragraph{Performance} Our formulation uses exact non-linear volume constraints on a non-linear
+optimization problem to preserve volume exactly in demanding applications like statics and dynamics
+with large time steps.  This limits the choice of optimization solvers to ones that
+support non-linear equality constraints (e.g. Interior Point or SQP solvers).  However, for dynamics problems
+with smaller time steps, or in applications with tolerance for volume loss/gain, we recommend
+linearizing the volume constraint, which drastically simplifies the problem. This can reduce the
+overhead of enforcing equality constraints, while still avoiding locking.
+
+\paragraph{Choosing $\lambda$} By decoupling $\lambda$ from its physical meaning, our formulation is
+faced with an additional challenge, which is to determine how exactly $\lambda$ effects the outcome
+of a simulation.  Fortunately, this is not a significant drawback since material parameters for
+standard Neo-Hookean FEM simulations also deviate from their measured values due to numerical
+stiffenning. This means that even the parameters of standard models require manual tuning to
+reproduce real phenomena in simulation.  Luckily data-driven methods for determining simulation
+parameters (which has seen significant attention in recent literature) are generally agnostic to the
+true physical meaning of these parameters, and thus are equally as compatible with our method.
+
+In conclusion, we presented a general method for realistic volumetric FEM simulations of human tissue.
+Our method provides exact volume preservation without the artificial stiffness due to volumetric
+locking using zonal volume constraints. This method gives artists the ability to define volume
+preserving zones that conform to anatomical compartments and automatically produces
+``squash-and-stretch'' effects. In addition, we introduced an epidermis model for simulating
+skin dynamics, as an additional surface area-preserving potential. We also proposed a
+modification to the energy potential to provide control over local volume flow
+that results in improved
+recovery during extreme compression and inversion. Our approach can be applied to a variety of energy
+models. In particular, we have demonstrated the effectiveness of these simple modifications to the
+invariant based non-linear hyperelastic energies like the Neo-Hookean and Stable Neo-Hookean energy
+models.

@@ -1,0 +1,136 @@
+\chapter{Background}
+\label{ch:Background}
+
+\subsection{Variational Elasticity}
+In this section, we establish the context for our contributions by introducing FEM simulation of
+hyperelastic materials as a variational problem.
+
+Let $\Omega \subset \R^{3}$ be a union of mesh tetrahedra representing an elastic solid in its
+undeformed configuration. Then let $\vec{x} \in \R^{3n}$ correspond to a stacked vector of mesh vertex
+positions that prescribe the deformation of the solid, where $n$ is the total number of vertices
+in the mesh. In an elasticity problem, we are
+interested in finding the configuration $\vec{x}$ that results in the lowest potential energy
+for the elastic solid $\Omega$ given a set of boundary conditions
+and external forces. Mathematically, we may write the problem statement as
+\begin{align}
+\vec{x}^* := \argmin_{\vec{x}} W(\vec{x}),
+\label{eq:energy_min}
+\end{align}
+where $W(\vec{x})$ represents the elastic work function for configuration $\vec{x}$. 
+This formulation allows conservative external forces to be added as additional potentials in the
+objective, however for the sake of simplicity we ignore external forces in the following sections.
+
+With linear (constant strain) elements, $W$, which is the integral of energy density function $\Psi(\vec{x})$, can be written as the sum of volume scaled per-element energies:
+\begin{align}
+W(\vec{x}) = \int_{\Omega} \Psi(\vec{x}) := \sum_{e} V_{e} \Psi(\vec{F}_e(\vec{x})),
+\label{eq:total_energy}
+\end{align}
+where $V_e$ is the volume of element $e$ in the reference configuration, which depends on the element deformation gradient $\vec{F}_e$.  The choice of the energy density function $\Psi$ determines the hyperelastic energy model. 
+
+For the time discretization, we adopt the implicit Euler time integrator and add an inertial
+energy term to this minimization, however in this paper we focus primarily on static FEM for
+simplicity. 
+
+\subsection{Incompressibility and Locking}
+There are two ways in which incompressibility could be enforced: either directly, as a constraint that the volume is preserved, or indirectly with a penalty term that powerfully resists compression. Since both ways are frequently referred to as ``incompressible,'' to avoid confusion we will refer to incompressible Neo-Hookean models using the first method as {\em ``Constrained Neo-Hookean''} (CNH), and those using the second method as
+{\em ``Unconstrained Neo-Hookean''} (UNH).
+
+Most incompressible hyperelastic energy models used in graphics are of
+the Unconstrained Neo-Hookean type, and penalize element-wise volume change with a term scaled by
+the first Lam\'e parameter $\lambda$, which depends on the Young's Modulus $E$ and Poisson's Ratio
+$\nu$. For instance, the most common version of such an energy density function
+\cite{BonetWood:2008} is written as
+\begin{align}
+\Psi_{\text{UNH}}(\vec{F}; \lambda, \mu) = \frac{\mu}{2}(I_C - 3) - \mu \log J + \frac{\lambda}{2} (\log J)^2
+\label{eq:neohookean}
+\end{align}
+where $I_C = \tr(\vec{F}^{\top}\vec{F})$ and $J = \det(\vec{F})$, which represents the fraction of
+volume after deformation. This means that when $J$ is close to zero (extreme compression),
+$\Psi_{\text{UNH}}$ will generate large penalty forces to restore the element to reference
+configuration. Another commonly used material model, co-rotated elasticity \cite{McAdams:2011} is written as
+\begin{align*}
+\Psi_{\text{CR}}(\vec{F}; \lambda, \mu) = \mu\|\vec{F} - \vec{R}\|^2_F + \frac{\lambda}{2} \tr(\vec{S} - \vec{I})^2,
+\end{align*}
+where $\vec{R}$ and $\vec{S}$ form the polar decomposition: $\vec{F} = \vec{R}\vec{S}$ and $\vec{I}$
+is the $3\times3$ identity matrix. Here, in a similar fashion, local compression is once again
+penalized by $\lambda$. However, as discussed in the introduction, high Poisson's ratios make the
+system stiff, which results in stiffness related issues such as instability, and artificial damping.
+
+%%%% DKP moved to intro
+
+% However, it is impossible to emulate true incompressibility and extremely difficult to simulate even
+% near-incompressibility with this approach.  This is because as the material approaches
+% incompressibility ($\nu \rightarrow 0.5$), $\lambda \rightarrow +\infty$. The numerical and visual
+% artifacts arising from a failure to correctly enforce incompressibility is known as locking. There 
+% are multiple aspects of locking which are problematic for simulating volume preserving elastic solids.
+
+% First, high Poisson's ratios make the system stiff, which results in stiffness related issues such as stability, and artificial damping.
+% Somewhat related to this, another issue is that when using linear tetrahedral elements as the finite element and element-wise volume constraints are introduced, the resulting system becomes heavily overconstrained.
+% There are multiple approaches to tackle this issue: the simplest being just using higher-order elements or 
+% hexahedral elements. However, the increased computational cost and difficulty of implementation might 
+% not be desirable. Another class of popular method is nonconforming finite elements (such as the Discontinous Galerkin class of methods), 
+% where the additional or nonconforming degrees of freedom allow significant deformation and therefore 
+% reduces the stiffness of the system.
+% The last approach are methods that seek to remove these element-wise 
+% constraints through Mixed Finite Elements or coarsened constraints, both of which are related to 
+% our method. 
+
+% The final aspect is volumetric locking, which arises from the choice of the constitutive 
+% equation, where volumetric stress depends on $\lambda$.
+% In classic FEM theory, C\'ea's Lemma dictates that the quasi-best approximation 
+% error depends not only on mesh discretization error, but also on $\lambda$. Hence, when $\lambda \rightarrow +\infty$, 
+% the finite element solution cannot be a reliable predictor of the solution of the PDE. A more detailed explanation 
+% can be found in Braess et al. \shortcite{Braess:2007}. 
+
+%A solution for volumetric locking is Mixed Finite Element 
+%methods, which introduces additional variables to the system of PDE, which are used to model the volumetric stress 
+%components of elasticity, hence decoupling volumetric stress from displacement and $lambda$. Specifically, u/p methods 
+%introduce pressure variable $p$ as the additional degree of freedom, such that it is constrained to be proportional to 
+%the volumetric stress component computed from the displacements. 
+
+%There are multiple causes behind this phenomenon, such as the dependence on $\lambda$
+%causing divergence from the true solution \cite{Braess:2007}, a lack of degrees of freedom causing
+%artificial stiffness \cite{Irving:2007}, and high stiffness introduced by the volume term resulting
+%in artificial damping. Hence, to simulate incompressibility successfully, one needs to decouple
+%incompressibility from the Poisson's ratio $\nu$.
+
+\subsection{Mixed Finite Element Methods}
+
+It is often necessary to compute reliable solutions not only for displacements but also for
+pressures (e.g., for frictional contact or fractures). For displacement-based one-field FEM,
+pressure must be computed from the displacement variables $\vec{x}$. Specifically, cell-wise
+hydrostatic pressure is usually computed as the negative of the divergence of the Cauchy stress
+tensor. Since the Cauchy stress tensor is related to the derivative of the energy density function
+$\Psi(\vec{x})$, essentially the pressures computed from a one-field FEM mainly depend on the volume
+term of $\Psi$. However, due to similar issues as discussed above, when the material is
+incompressible and $\lambda \rightarrow +\infty$ the volume term stops being a reliable model for
+volumetric stress.
+
+One traditional way of decoupling incompressibility from $\lambda$ is by introducing an
+additional pressure variable $\vec{p}$ that models the volumetric stress component of elements,
+interpolated separately from displacement on the finite element mesh \cite{Bathe:2006}. This allows us to reformulate the variational problem as
+\begin{align}
+\vec{x}^* &:= \arg \max_{\vec{p}} \min_{\vec{x}} \int_{\Omega} \hat{\Psi}(\vec{x}) + \vec{p}^T \vec{c}(\vec{x}),
+\label{eq:mixed_variational}
+\end{align}
+where $\hat{\Psi}(\vec{x})$ is the deviatoric component of the displacement-based elastic potential,
+and $\vec{c}(\vec{x})$ is a term that relates $\vec{p}$ to $\vec{x}$. This additional term can be
+interpreted as a constraint on $\vec{p}$ to be proportional to the hydrostatic pressure computed
+from the displacements $\vec{x}$. Then, $\vec{p}$ becomes the Lagrange multiplier for the constraint
+$\vec{c}(\vec{x})$.  One implementation of this type of formulation is shown in Sussman et al.
+\shortcite{Sussman:1987}.  These methods are known as the displacement-pressure Mixed Finite Element
+Methods and are one of the most accurate ways to solve the problem.
+
+With the additional degree of freedom, the Bab\u{u}ska-Brezzi inf-sup condition restricts the 
+choice of the space of finite element basis for the additional variable for the method to be stable \cite{bathe:2001}. 
+This condition dictates that the order of basis for the displacement variables must be higher than that
+of the pressure 
+variables. Specifically, for conforming tetrahedral elements the lowest order finite element space choices are either 
+the Hood-Taylor elements ($P_2$ for $\vec{x}$ / $P_1$ for $\vec{p}$, where $P_k$ denotes the space of $k$-th order polynomials), or MINI ($P_1^+ / P_1$, where superscript $+$ denotes an enrichment of cubic bubble \cite{arnold:1984}).
+Hence, Mixed FEM with a simple linear tetrahedral Finite Element basis for displacement is usually not valid for stable simulations. 
+This includes the Average Nodal Pressure elements proposed in Irving et al. \shortcite{Irving:2007}, where the Lagrange multipliers of 1-ring volume constraints can be interpreted as cell-wise constant pressure variables ($P_0$) being averaged on the nodes. Although this alleviates some of the problems arising from each element being constrained, it still fails to meet the inf-sup condition and spurious modes may occur without additional stabilization \cite{puso:2006}. 
+
+Recent research has been focused on developing a stabilized low-order tetrahedral element for
+incompressible elasticity \cite{scovazzi:2016}. Many of these methods allow almost a $P_1 / P_1$
+mixed element to be stable and accurate, by adding an additional stabilization term to the FEM basis. However, these methods are still much more expensive than standard linear tetrahedral elements, since the additional pressure variables cannot be solved with simple constraints and require a specific mixed FEM system to be built and solved.
+The intuition for our approach from these works is that, to achieve an efficient and stable computation of the additional pressure variables, one must sample the pressure variables in a coarser scale compared to the displacement variables. Then, we are able to split the pressure computation into a coarser and finer scale, to control the coarse-scale pressures as separate pressure variables as Lagrange multipliers for volume constraints, as in Eq.\ref{eq:mixed_variational}, and compute the fine-scale pressures from displacements. Therefore, we look to a much more efficient and simpler approach by enforcing a volume constraint for a few larger zones of elements, and modeling the element-wise local pressure as an additional penalty term.

@@ -282,6 +282,49 @@
 % \renewcommand{\@pnumwidth}{3em}
 % \makeatother
 
+\usepackage{amsmath}
+\usepackage{booktabs} % For formal tables
+\usepackage{mathrsfs} % script font
+\usepackage{bm}
+\usepackage{breqn}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{patterns,shapes,backgrounds,shapes,positioning,petri,topaths}
+\usepackage{pgfplots}
+\usepackage{subcaption}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{float}
+\usepackage{adjustbox}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[percent]{overpic}
+
+\newcommand{\R}{\mathbb{R}}
+\makeatletter
+\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
+\makeatother
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\Lagr}{\mathcal{L}}
+\newcommand{\secref}[1]{\S\ref{#1}}
+\renewcommand{\sectionautorefname}{\S}
+\renewcommand{\subsectionautorefname}{\S}
+\renewcommand{\subsubsectionautorefname}{\S}
+
+\newcommand{\plusbinomial}[3][2]{(#2 + #3)^#1}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\vectorize}{vec}
+\DeclareMathOperator*{\tr}{tr}
+
+\def\R{\mathbb{R}}
+
+% Various style definitions for geometric quantities
+\def\vec#1{\mathbf{#1}} % Vector quantity
+
+\def\comment#1{{\color{red} #1}}
+\def\todo#1{\comment{\bf TODO: #1}}
+\def\new#1{{\color{red} #1}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -302,36 +345,26 @@
 %% Document meta-data: be sure to also change the \hypersetup information
 %%
 
-\title{On the Use of the \texttt{ubcdiss} Template}
-%\subtitle{If you want a subtitle}
+\title{Simulation of Incompressible Elastic Material Using Zonal Volume Constraints}
 
-\author{Johnny Canuck}
-\previousdegree{B. Basket Weaving, University of Illustrious Arts, 1991}
-\previousdegree{M. Silly Walks, Another University, 1994}
+\author{Seung Heon Sheen}
+\previousdegree{B.S., Texas A\&M University, 2018}
 
 % What is this dissertation for?
-\degreetitle{Doctor of Philosophy}
+\degreetitle{Master of Science}
 
 \institution{The University of British Columbia}
 \campus{Vancouver}
 
-\faculty{The Faculty of XXX}
-\department{Basket Weaving}
-\submissionmonth{April}
-\submissionyear{2192}
+\faculty{The Faculty of Graduate and Postdoctoral Studies}
+\department{Computer Science}
+\submissionmonth{August}
+\submissionyear{2020}
 
 % details of your examining committee
-\examiningcommittee{John Smith, Materials Engineering}{Supervisor}
-\examiningcommittee{Mary Maker, Materials Engineering}%
-    {Supervisory Committee Member}
-\examiningcommittee{Nebulous Name, Department}{Supervisory Committee Member}
-\examiningcommittee{Magnus Monolith, Other Department}{Additional Examiner}
-
-% details of your supervisory committee
-\supervisorycommittee{Ira Crater, Materials Engineering}%
-    {Supervisory Committee Member}
-\supervisorycommittee{Adeline Long, \textsc{CEO} of Aerial Machine
-    Transportation, Inc.}{Supervisory Committee Member}
+\examiningcommittee{Dinesh K. Pai, Computer Science}{Supervisor}
+\examiningcommittee{..., Computer Science}%
+    {Examining Committee}
 
 %% hyperref package provides support for embedding meta-data in .PDF
 %% files
@@ -418,11 +451,16 @@
 
 %    2. Main body
 % Generally recommended to put each chapter into a separate file
-%\include{relatedwork}
 %\include{model}
 %\include{impl}
 %\include{discussion}
-%\include{conclusions}
+\include{background}
+\include{relatedwork}
+\include{constraint}
+\include{penalty}
+\include{zoning}
+\include{results}
+\include{conclusion}
 
 %    3. Notes
 %    4. Footnotes
