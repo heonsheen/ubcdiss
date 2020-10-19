@@ -7,15 +7,15 @@ it reduces the cost and numerical challenges of enforcing volume preservation lo
 ensuring good behavior globally.  Note that, unlike in the hydrostatic case, volume can not transfer
 completely freely since elastic forces due to the shear modulus restrict large flows. 
 
-\new{
-	However, the zonal constraints by themselves model only the hydrostatic pressure in the coarse zones, hence we need to also model the finer-scale pressures in the individual elements.
-	We employ a more traditional approach to modeling element-wise pressure by using a penalty method.
-	To model this penalty function, we look at the volume penalty functions present in Neo-Hookean elasticity models.
-	In Neo-Hookean models, the bulk modulus models how much the material resists volumetric deformation per element. 
-	The bulk moudulus is represented in most Neo-Hookean energy formulations in the first Lam\'e parameter $\lambda$, which is a combination of the shear and bulk modulus.
-	However, as discussed in Section~\ref{sec:back}, when $\lambda \rightarrow +\infty$ locking occurs, and the pressure computations become unstable.
-	But since we model the coarse-scale pressures as constraints, and we only need to model the finer-scale deviations in pressures, we are able to use a lower $\lambda$ and avoid locking.
-}
+
+However, the zonal constraints by themselves model only the hydrostatic pressure in the coarse zones, hence we also need to model the finer-scale pressures in the individual elements.
+We employ a more traditional approach to modeling element-wise pressure in the penalty method.
+To model this local compression penalty function, we look at the volume penalty functions present in various Neo-Hookean elasticity models.
+In Neo-Hookean models, the bulk modulus models how much the material resists element-wise volumetric deformation. 
+The bulk moudulus is represented in most Neo-Hookean energy formulations in the first Lam\'e parameter $\lambda$, which is a combination of the shear and bulk modulus.
+However, as discussed in Section~\ref{ch:Background}, when $\lambda \rightarrow +\infty$ locking occurs, and the pressure computations become unstable.
+But since we model the coarse-scale pressures as constraints, and we only need to model the finer-scale deviations in pressures, we are able to use a lower $\lambda$ and avoid locking.
+
 
 If $\lambda$ is set too low the simulation is more susceptible to collapsing elements 
 and even equilibrium configurations with inverted elements for invertible energy models.
@@ -32,21 +32,21 @@ non-invertible energies and doesn't require additional parameters, as can be see
 of the volume change penalty term in terms of relative volume change $J$ in Figure~\ref{fig:penalty_plots},
 the Stable Neo-Hookean energy resists compression much more timidly as compared to
 the standard Neo-Hookean model defined in Equation \eqref{eq:neohookean}.
-\new{
-	This results in the simulation possibly converging to an invalid configuration where inverted elements exist, 
-	and a nonlinear optimization solver can struggle due to inverted elements being present in intermediate solutions and causing oscillations.
-	Especially, this solver oscillations can be aggravated when constraints are introduced, presenting major performance issues when one tries to use volume constraints. 
-}
+
+This results in the simulation possibly converging to an invalid configuration where inverted elements exist, 
+and a nonlinear optimization solver can struggle due to inverted elements being present in intermediate solutions which cause oscillations.
+Especially, this oscillation can be aggravated when constraints are introduced, presenting major performance issues when one tries to use volume constraints. 
+
 %% TODO with new energy model
 \begin{figure}[t] 
 	\centering
 	\begin{subfigure}{.49\linewidth}
-		\centering \includegraphics[width=1.5in]{images/energy_plot.pdf}
+		\centering \includegraphics[width=2.0in]{images/pen_plot.pdf}
 		\caption*{(a)}
 		\label{sfig:energy_plot}
 	\end{subfigure}%
 	\begin{subfigure}{.49\linewidth}
-		\centering \includegraphics[width=1.5in]{images/stress_plot.pdf}
+		\centering \includegraphics[width=2.0in]{images/stress_plot.pdf}
 		\caption*{(b)}
 		\label{sfig:stress_plot}
 	\end{subfigure}%
@@ -66,10 +66,9 @@ This suggests a need for a good penalty term that is both invertible and still r
 effectively. Let us write such penalty term as $U(J)$, controlled linearly by parameter $\lambda$.
 To design such a penalty term, we first take a look at what conditions the function $U(J)$ must
 meet. 
-\new{
-	A detailed study of various Neo-Hookean volume penalty terms and explanations for each of the 
-	conditions can be found in \cite{hartmann:2003}.
-}
+
+A detailed study of various Neo-Hookean compression penalty terms and explanations for each of the 
+conditions can be found in \cite{hartmann:2003}.
 
 \begin{enumerate}[label=\alph*)]
 	\item The function must evaluate to 0 at rest ($J = 1$).
@@ -99,17 +98,17 @@ Therefore, this is a suitable choice for our compression penalty term.
 Plots comparing different penalty terms $U(J)$ and stresses $\frac{\partial U(J)}{\partial J}$ are shown in Figure~\ref{fig:penalty_plots}.
 Experimentally, $\beta = 1$ was sufficient for most realistic examples governed by external force, but for examples where inversions were more likely due to contact or boundary conditions, we could easily find higher $\beta$ that resolves all inversions.
 
-\new{
-	The additional nonlinearity introduced in the gradient (Equation \eqref{eq:penalty_derivatives}) of our penalty function compared to a standard Stable Neo-Hookean penalty is the main reason for the inversion-robustness in our model. 
-	It is possible to formulate even more nonlinear models than what we propose here, but in our experiments we found that such energy models provide no significant benefit in resolving inversions compared to \eqref{eq:penalty_function} and only increase the number of nonlinear solver iterations until convergence.
-}
+The additional nonlinearity introduced in the gradient (Equation \eqref{eq:penalty_derivatives}) of our penalty function compared to a standard Stable Neo-Hookean penalty is the main reason for the inversion-robustness in our model. 
+It is possible to formulate models with even higher nonlinearity than what we propose here, but in our
+experiments we found that such energy models provide no significant benefit in resolving inversions
+compared to \eqref{eq:penalty_function} and only increase the number of nonlinear solver iterations
+until convergence. We discuss this further in Appendix~\ref{ap: Penalty}.
 
 We demonstrate that by this simple addition to the energy potential, we can obtain results similar to 
 that of using mixed finite elements as in \cite{Irving:2007}, but with very few or even 
 one global constraint. The results of Figure  \ref{fig:suspended-cubes} demonstrate
 that with a penalty of about $\nu = 0.45$ and with just one global zone, the deformations are close to 
 using a 1-ring constraint around each vertex. 
-\new{
-	Also, we found that simply adding this additional nonlinearity to the energy resulted in faster performances in most examples when volume constraint was used, and even in many cases where there were no constraints. 
-	In Table~\ref{tab:performance}, we compare the performance results of using $\beta = 0$ (equivalent to SNH) and higher $\beta$.
-}
+
+Also, we found that simply adding this additional nonlinearity to the energy resulted in faster performances in most examples when volume constraint was used, and even in many cases where there were no constraints. 
+In Table~\ref{tab:performance}, we compare the performance results of using $\beta = 0$ (equivalent to SNH) and higher $\beta$.

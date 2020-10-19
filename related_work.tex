@@ -30,18 +30,18 @@ each element can cause severe numerical instabilities and locking especially in 
 % \todo{Need a reference to support this claim}.
 
 In traditional FEM, volumetric locking is addressed by decoupling incompressibility from displacements with Mixed Finite Element Methods. 
-In computer graphics, Irving et al. \shortcite{Irving:2007} have addressed locking in tetrahedral meshes by
+In computer graphics, Irving et al. \cite{Irving:2007} have addressed locking in tetrahedral meshes by
 softly constraining the volume of the one ring around each vertex in a tetrahedral mesh using position
 and velocity correction steps. This approach is an application of nodal strain elements \cite{bonet:1998},
 where stress and stain, in this case their volumetric component, is nodally interpolated in a mixed FEM. 
 However, without additional stabilization of some sort, these types of mixed elements are known to be unstable 
 and the number of additional pressure variables are proportional to the number of nodes.
 A further discussion of Mixed Finite Element Methods is presented in the next section.
-Kaufmann et al. \shortcite{Kaufmann:2012} looked to solve locking by introducing additional degrees of freedom 
-to the system by using a Discontinuous Galerkin discretization. Smith et al. \shortcite{Smith:2018} proposed 
+Kaufmann et al. \cite{Kaufmann:2012} looked to solve locking by introducing additional degrees of freedom 
+to the system by using a Discontinuous Galerkin discretization. Smith et al. \cite{Smith:2018} proposed 
 the Stable Neo-Hookean energy model to handle invertible elements as well as improve stability for high Poisson's ratios.
 
-Irving et al. \shortcite{Irving:2007} proposed a method of (weakly) constraining volume in
+Irving et al. \cite{Irving:2007} proposed a method of (weakly) constraining volume in
 each 1-ring neighborhood of every mesh vertex. This method is an implementation of the 
 Average Nodal Pressure element \cite{bonet:1998}, where the cell-wise constant pressure samples of the
 one-ring neighbors are averaged on the nodes. By contrast, our method uses pressure samples
@@ -67,7 +67,7 @@ A line of recent work has proposed methods for resolving element inversions by e
 density function to the negative volume region.  Force filtering methods
 \cite{Irving:2004,Teran:2005} have improved inversion stability but suffer from subtle problems
 including invalid inversion recovery directions or derivative drift as thoroughly explored in
-\cite{Smith:2018}. Stomakhin et al. \shortcite{Stomakhin:2012} propose a $C^1$ or $C^2$ extension of the
+\cite{Smith:2018}. Stomakhin et al. \cite{Stomakhin:2012} propose a $C^1$ or $C^2$ extension of the
 entire energy density function for low volume fractions, which resolves many of these problems.
 However, filtering methods can be quite sensitive to appropriate specification of filtering thresholds
 and reflection conventions \cite{wang:2016}. We instead follow a simpler approach similar to \cite{Smith:2018},

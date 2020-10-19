@@ -30,7 +30,7 @@ $\vec{c}(\vec{x}) = \vec{0}$. Specifically, our constraint enforces the total vo
 local sets of finite elements to be preserved.
 Compared to other mixed elements, our approach is much more efficient and easier to implement while showing
 comparable results. Moreover, our approach provides the modeling flexibility of choosing zones that 
-are aligned with anatomical compartments (see Section~\ref{sec:zoning}).
+are aligned with anatomical compartments (see Section~\ref{ch:Volumetric Zoning}).
 
 Each constraint is simply formulated as the requirement that the total volume of all elements in a
 specified zone of the deformed mesh is equal to the initial volume. That is, for $j$-th zone $G_j$, the zonal
@@ -141,25 +141,17 @@ Lagrange multipliers for the $j$-th zonal volume constraint. If each element was
 zone, our method would recreate the mixed-element formulation for incompressible materials. However,
 we use only a handful of zones, which keeps the problem size small and avoids locking and instability.
 
-\new{
-	An important advantage of enforcing volume preservation with zonal constraints is that it allows a way of simulating incompressible
-	objects using a much coarser mesh than by using a traditional 1-field method. C\'ea's lemma already couples the quasi-best approximation error 
-	with mesh resolution, and since a 1-field FE solutions also couple the bulk modulus to the upper bound of the approximation error, it makes it 
-	even harder to use a coarser mesh when bulk modulus is high. However, when incompressibility is decoupled from the bulk modulus, and we can 
-	use much smaller $\lambda$, we are able to achieve simulation results of a fine-mesh simulation that is consistent with a much coarser mesh. 
-	Figure~\ref{fig:fine-ball} shows a simple dynamic simulation with a very fine mesh, and Figure~\ref{fig:coarse-ball} shows the same simulation
-	using a much coarser mesh. We see that both the low Poisson ratio and our method achieves consistent visual results between the fine and coarse
-	case, but the high Poisson ratio case fails to converge very early in the simulation.
-}
+An important advantage of enforcing volume preservation with zonal constraints is that it allows a way of simulating incompressible
+objects using a much coarser mesh than by using a traditional 1-field method. C\'ea's lemma already couples the quasi-best approximation error 
+with mesh resolution, and since a 1-field FE solutions also couple the bulk modulus to the upper bound of the approximation error, it makes it 
+even harder to use a coarser mesh when bulk modulus is high. However, when incompressibility is decoupled from the bulk modulus, and we can 
+use much smaller $\lambda$, we are able to achieve simulation results of a fine-mesh simulation that is consistent with a much coarser mesh. 
+Figure~\ref{fig:fine-ball} shows a simple dynamic simulation with a very fine mesh, and Figure~\ref{fig:coarse-ball} shows the same simulation
+using a much coarser mesh. We see that both the low Poisson ratio and our method achieves consistent visual results between the fine and coarse
+case, but the high Poisson ratio case fails to converge very early in the simulation.
 
-\new{
-	We solved the constraints using Ipopt \cite{Wachter:2006}, a non-linear optimization package based on interior point method.
-	However, our method should work with any non-linear optimizer that is able to deal with nonlinear equality constraints. 
-	In our experiments, we found that not much parameter tuning was required to use our method with Ipopt: we only occasionally had to tune the \texttt{nlp_scaling_max_gradient} parameter when used with additional nonlinear constraints. 
-}
-\todo{additional explanation on Ipopt?}
 
-\subsection{Stabilization}
+\section{Stabilization}
 We apply the F-bar method \cite{neto:2005} to the energy density function to ensure stability. 
 This is based on a multiplicative split of the deformation gradient $\vec{F}$ into 
 a deviatoric and volumetric component. The deviatoric part is computed as

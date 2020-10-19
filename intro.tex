@@ -12,7 +12,7 @@ makes them particularly difficult to simulate. Human soft tissue, for
 instance, is essentially incompressible, with a Poisson's ratio close
 to 0.5 \cite{fung2013biomechanics}. As a result, much of contemporary
 research in computer graphics focuses on robust simulation of
-incompressible hyperelastic solids (see Sec.~\ref{sec:related}). We
+incompressible hyperelastic solids (see Sec.~\ref{ch:Related Work}). We
 focus on the popular Neo-Hookean models, which are relatively simple
 while including non-linearity and the temptation to control
 incompressibility by setting Poisson's ratio $\nu \simeq 0.5$.
@@ -29,7 +29,7 @@ extremely difficult to simulate even near-incompressibility with this
 approach.  This is because as the material approaches
 incompressibility $\nu \rightarrow 0.5$, the first Lam\'e parameter
 % (which penalizes volume change)
-$\lambda \rightarrow +\infty$ (see Sec.~\ref{sec:back} for
+$\lambda \rightarrow +\infty$ (see Sec.~\ref{ch:Background} for
 background). The numerical and visual artifacts arising from the failure
 to correctly enforce incompressibility is known as {\em locking.}
 
@@ -82,8 +82,11 @@ instabilities. This can, of course, lead to volume loss per element
 but that will be compensated by volume gain in other elements in a
 zone to preserve volume. In other words, our simulation mesh may be
 viewed as a type of Arbitrary Lagrangian-Eulerian (ALE) mesh, in which
-volume is never lost but allowed to flow from one cell to another. To
-our knowledge, this technique has not yet been closely studied with
+volume is never lost but allowed to flow from one cell to another. 
+Locking is always aggravated when using coarse simulation mesh, but our
+method allows a stable simulation of volume preserving materials
+with a coarse mesh.
+To our knowledge, this technique has not yet been closely studied with
 FEM simulations in computer graphics.
 
 Note that $\lambda$ now controls only element volume, rather than the
@@ -103,7 +106,7 @@ has attracted much attention in the community \cite{Irving:2007,
 	Stomakhin:2012,Smith:2018}.  While our $\lambda$ values are no
 longer constrained by volume preservation, there is still a need to
 penalize extreme volume loss per element to avoid such degeneracies.
-We address this in Sec.~\ref{sec:penalty} with an amendment to the
+We address this in Sec.~\ref{ch:Volume Penalty} with an amendment to the
 volume penalty term found in compressible elastic energy
 models. Additionally, the proposed correction improves the compression
 response in invertible energies.
