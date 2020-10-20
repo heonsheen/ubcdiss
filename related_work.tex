@@ -36,13 +36,12 @@ and velocity correction steps. This approach is an application of nodal strain e
 where stress and stain, in this case their volumetric component, is nodally interpolated in a mixed FEM. 
 However, without additional stabilization of some sort, these types of mixed elements are known to be unstable 
 and the number of additional pressure variables are proportional to the number of nodes.
-A further discussion of Mixed Finite Element Methods is presented in the next section.
+A further discussion of Mixed Finite Element Methods was presented in Chapter~\ref{ch:Background}.
 Kaufmann et al. \cite{Kaufmann:2012} looked to solve locking by introducing additional degrees of freedom 
 to the system by using a Discontinuous Galerkin discretization. Smith et al. \cite{Smith:2018} proposed 
 the Stable Neo-Hookean energy model to handle invertible elements as well as improve stability for high Poisson's ratios.
 
-Irving et al. \cite{Irving:2007} proposed a method of (weakly) constraining volume in
-each 1-ring neighborhood of every mesh vertex. This method is an implementation of the 
+Irving et al. \cite{Irving:2007} was an implementation of the 
 Average Nodal Pressure element \cite{bonet:1998}, where the cell-wise constant pressure samples of the
 one-ring neighbors are averaged on the nodes. By contrast, our method uses pressure samples
 (i.e. the volume preserving zones) that are coarser and decoupled from the mesh topology.
